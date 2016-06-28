@@ -1,15 +1,17 @@
 import 'file?name=[name].[ext]!./index.html'
 import React from 'react'
 import ReactDom from 'react-dom'
+import Brief from './extend.jsx'
 
-class Hello extends React.Component {
+class HelloWorld extends React.Component {
 	render(){
 	return <div>
 			<h1>{"Hello World!"}</h1>
+			<Brief />
 		</div>
 	}
 }
 
 ReactDom.render(
-	<Hello />,
+	<HelloWorld />,
 	document.getElementById('example'));
