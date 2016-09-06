@@ -1,3 +1,6 @@
+/*
+ * 保护关键部分，互斥锁
+ */
 #include <sys/types.h>
 #include <sys/sem.h>
 #include <sys/ipc.h>

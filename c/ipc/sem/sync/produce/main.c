@@ -1,3 +1,6 @@
+/*
+ * 同步，生产者
+ */
 #include <sys/types.h>
 #include <sys/sem.h>
 #include <sys/ipc.h>

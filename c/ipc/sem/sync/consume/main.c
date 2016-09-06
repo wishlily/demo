@@ -1,3 +1,6 @@
+/*
+ * 同步，消费者
+ */
 #include <sys/types.h>
 #include <sys/sem.h>
 #include <sys/ipc.h>

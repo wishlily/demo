@@ -1,3 +1,6 @@
+/*
+ * 消息队列，客户端
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
