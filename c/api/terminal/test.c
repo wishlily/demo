@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <mcheck.h>
 
 #include "term.h"
 
@@ -81,6 +82,9 @@ int test_getline(term_t *tp)
 
 int main()
 {
+	/* $ export MALLOC_TRACE=malloc.log */
+	mtrace();
+
 	term_loc_t start = {12, 4};
 	term_t *tp = term_init(start, 10, 20);
 	if (tp == NULL) {

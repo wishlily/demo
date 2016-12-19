@@ -169,7 +169,7 @@ uninstall:
 .PHONY: clean
 clean:
 	@echo "Deleting $(BIN_NAME) symlink"
-	@$(RM) $(BIN_NAME)
+	@$(RM) $(BIN_NAME) *.log
 	@echo "Deleting directories"
 	@$(RM) -r obj
 #	@$(RM) -r bin
