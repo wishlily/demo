@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mcheck.h>
+#include <stdbool.h>
 
 #include "term.h"
 
@@ -28,7 +29,21 @@ char *test_array[TEST_ARRAY_NUM] = {
 	{"Yet do thy worst old Time: despite thy wrong,"},
 	{"My love shall in my verse ever live young."}
 };
-
+char *test_array2[TEST_ARRAY_NUM] = {
+	{"Devouring Time blunt thou the lion's paws,"},
+	{"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"},
+	{"Pluck the keen teeth from the fierce tiger's jaws,\n"},
+	{"And burn the long-lived phoenix, in her blood,\nMake glad and sorry seasons as thou fleet'st,"},
+	{"And do whate'er thou wilt swift-footed Time"},
+	{"If you shed tears when you miss the sun, you also miss the stars."},
+	{"To the wide world and all her fading sweets:"},
+	{"But I forbid thee one most heinous crime,"},
+	{"O carve not with thy hours my love's fair brow,"},
+	{"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n**************************"},
+	{"For beauty's pattern to succeeding men."},
+	{"Yet do thy worst old Time: despite thy wrong,"},
+	{"My love shall in my verse ever live young."}
+};
 
 int test_text(term_t *tp)
 {
@@ -62,8 +77,10 @@ int test_text_add(term_t *tp)
 		}
 	}
 	term_display(tp);
-	term_display_next(tp);
-	term_display_back(tp);
+	term_page_next(tp);
+	term_display(tp);
+	term_page_back(tp);
+	term_display(tp);
 	return 0;
 }
 
@@ -71,13 +88,24 @@ int test_getline(term_t *tp)
 {
 	char cmd[5];
 	while (1) {
-		int len = term_getline(cmd, 5);
+		int len = term_getline(tp, cmd, 5);
 		info_printf("[%d,%d]%s\n", len, strlen(cmd), cmd);
 		if (!strcmp(cmd, "exit")) {
 			break;
 		}
 	}
 	return 0;
+}
+
+bool running = true;
+
+void *displayThreadRoutine(void *args)
+{
+	term_t *tp = (term_t *)args;
+	while(running) {
+		term_display(tp);
+		usleep(200);
+	}
 }
 
 int main()
@@ -98,6 +126,8 @@ int main()
 	term_clear();
 	term_goto(5, 5);
 	term_printf("Hello World!\n");
+	term_goto(5, 5);
+	term_printf_n(12, "%s", "Hello!");
 	test_number++;
 #endif
 
@@ -124,6 +154,7 @@ int main()
 	test_number++;
 #endif
 
+#if 1
 	term_clear();
 	int ret = term_text(tp, test_array[0]);
 	if (ret < 0) {
@@ -135,26 +166,52 @@ int main()
 			goto fail;
 		}
 	}
-	term_display(tp);
+	pthread_t display_thread;
+	pthread_create(&display_thread, NULL, displayThreadRoutine, tp);
 	char cmd[32];
 	while (1) {
 		/* 直接回车不改变 buff 数据，所以回车默认执行上次的命令 */
-		int len = term_getline(cmd, 5);
+		int len = term_getline(tp, cmd, 10);
 		if (!strcmp(cmd, "exit")) {
+			running = false;
 			break;
 		} else if (!strcmp(cmd, "back") || !strcmp(cmd, "b")) {
-			term_display_back(tp);
+			term_page_back(tp);
 		} else if (!strcmp(cmd, "next") || !strcmp(cmd, "n")) {
-			term_display_next(tp);
-		} else {
-			term_display(tp);
+			term_page_next(tp);
+		} else if (!strcmp(cmd, "2")) {
+			int ret = term_update(tp, test_array2[0]);
+			if (ret < 0) {
+				goto fail;
+			}
+			int i;
+			for (i = 1; i < TEST_ARRAY_NUM; i++) {
+				if (term_text_add(tp, test_array2[i]) < 0) {
+					goto fail;
+				}
+			}
+		} else if (!strcmp(cmd, "1")) {
+			int ret = term_update(tp, test_array[0]);
+			if (ret < 0) {
+				goto fail;
+			}
+			int i;
+			for (i = 1; i < TEST_ARRAY_NUM; i++) {
+				if (term_text_add(tp, test_array[i]) < 0) {
+					goto fail;
+				}
+			}
 		}
 	}
+	pthread_join(display_thread, NULL);
+#endif
+
+	printf("\n");
 	info_printf("test successful.\n");
 	term_free(tp);
 	exit(0);
 fail:
-	err_printf("term test[%d] failed.\n", test_number);
+	err_printf("\nterm test[%d] failed.\n", test_number);
 	term_free(tp);
 	exit(1);
 }

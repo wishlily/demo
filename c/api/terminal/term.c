@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
+#include <unistd.h>
 
 #include "term.h"
 
@@ -125,6 +127,14 @@ int term_text(term_t *handler, char *text)
 	return term_text_add(handler, text);
 }
 
+int term_update(term_t *handler, char *text)
+{
+	uint16_t page = handler->page;
+	term_text_free(handler);
+	handler->page = page;
+	return term_text_add(handler, text);
+}
+
 #define HELP_PAGE_BACK "back"
 #define HELP_PAGE_NEXT "next"
 
@@ -145,6 +155,9 @@ static void term_display_help(term_t *handler)
 	// clear cmd & set cursor
 	term_goto(cmd_loc.y, cmd_loc.x);
 	term_printf_n(fp->limit.x, "$ ");
+	if (strlen(fp->inputs)) {
+		term_printf_n(fp->limit.x-2, "%s", fp->inputs);
+	}
 }
 
 static void term_display_page(term_t *handler, uint16_t page)
@@ -177,19 +190,19 @@ static void term_display_page(term_t *handler, uint16_t page)
 
 void term_display(term_t *handler)
 {
-	term_display_page(handler, 0);
+	term_display_page(handler, handler->page);
+	fflush(stdout);
 }
 
-void term_display_back(term_t *handler)
+void term_page_back(term_t *handler)
 {
 	term_t *fp = handler;
 	if (fp->page > 0) {
 		fp->page--;
 	}
-	term_display_page(handler, fp->page);
 }
 
-void term_display_next(term_t *handler)
+void term_page_next(term_t *handler)
 {
 	term_t *fp = handler;
 	uint16_t page_number = fp->lines / fp->limit.y;
@@ -199,28 +212,51 @@ void term_display_next(term_t *handler)
 	if (fp->page < page_number - 1) {
 		fp->page++; // from zero
 	}
-	term_display_page(handler, fp->page);
 }
 
-int term_getline(char *buff, int len_limit)
+/* reads from keypress, doesn't echo */
+static int getch(void)
 {
+	struct termios oldattr, newattr;
+	int ch;
+	tcgetattr( STDIN_FILENO, &oldattr );
+	newattr = oldattr;
+	newattr.c_lflag &= ~( ICANON | ECHO );
+	tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
+	ch = getchar();
+	tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
+	return ch;
+}
+
+int term_getline(term_t *handler, char *buff, uint32_t buff_size)
+{
+	term_t *fp = handler;
 	int len = 0;
 	while (1) {
-		int c = getchar();
+		int c = getch();
 		switch (c) {
 		case '\b':
+		case 127:
 			if (len > 0) {
 				len--;
+				fp->inputs[len] = '\0';
 			}
 			break;
 		case '\n':
-			if (len < len_limit && len) {
-				buff[len] = '\0';
+			/* only enter not change */
+			if (len < TERM_INPUT_BUFF_SIZE) {
+				fp->inputs[len] = '\0';
+			}
+			fp->inputs[TERM_INPUT_BUFF_SIZE-1] = '\0';
+			if (len) {
+				strncpy(buff, fp->inputs, buff_size);
+				buff[buff_size-1] = '\0';
+				memset(fp->inputs, 0, TERM_INPUT_BUFF_SIZE);
 			}
 			return len;
 		default:
-			if (len < len_limit) {
-				buff[len++] = c;
+			if (len < TERM_INPUT_BUFF_SIZE) {
+				fp->inputs[len++] = c;
 			}
 		}
 	}

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define TERM_INPUT_BUFF_SIZE 64
+
 /* color */
 #define TERM_BLACK  0
 #define TERM_RED    1
@@ -27,8 +29,8 @@
 #define TERM_DIM       2
 #define TERM_UNDERLINE 4
 #define TERM_BLINK     5
-#define TERM_REVERSE   6
-#define TERM_HIDDEN    7
+#define TERM_REVERSE   7
+#define TERM_HIDDEN    8
 
 #define term_clear()                     printf("\033[2J");
 /* auto clear the line */
@@ -60,6 +62,7 @@ typedef struct term {
 	term_text_t *last_line;
 	uint16_t lines;
 	uint16_t page;
+	char inputs[TERM_INPUT_BUFF_SIZE];
 } term_t;
 
 /**
@@ -77,13 +80,15 @@ term_t *term_init(term_loc_t start, uint16_t row, uint16_t col);
 void term_free(term_t *handler);
 /* clear old text & add new text */
 int term_text(term_t *handler, char *text);
+/* clear old text but save page info */
+int term_update(term_t *handler, char *text);
 /* add text */
 int term_text_add(term_t *handler, char *text);
 /* display text */
 void term_display(term_t *handler);
-void term_display_back(term_t *handler);
-void term_display_next(term_t *handler);
+void term_page_back(term_t *handler);
+void term_page_next(term_t *handler);
 /* get line from i/o, only enter not change buff data */
-int term_getline(char *buff, int len_limit);
+int term_getline(term_t *handler, char *buff, uint32_t buff_size);
 
 #endif
