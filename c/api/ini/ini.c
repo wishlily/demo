@@ -574,3 +574,10 @@ int ini_read_uint8s(ini_t *handler,
 {
 	INI_READ_ARRAY(uint8_t, true);
 }
+
+int ini_read_uint16s(ini_t *handler,
+	char *section, char *name,
+	uint16_t *array, uint32_t array_size, uint16_t *default_value)
+{
+	INI_READ_ARRAY(uint16_t, true);
+}

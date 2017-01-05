@@ -58,7 +58,48 @@ int main()
 		}
 	} while(0);
 
+	test_number++;
+	do {
+		uint16_t want[5] = {23,34,5,7,0};
+		uint16_t a[10];
+		int ret = ini_read_uint16s(conf, "mytest", "array", a, 10, NULL);
+		if (ret < 0) {
+			printf("ERR test%d: %d\n", test_number, ret);
+			break;
+		}
+		if (memcmp(want, a, sizeof(want)) || ret != sizeof(want) / sizeof(uint16_t)) {
+			printf("ERR test%d: [%d]", test_number, ret);
+			int i;
+			for (i = 0; i < ret; i++) {
+				printf("%d,", a[i]);
+			}
+			printf("\n");
+			break;
+		}
+	} while(0);
+
+	test_number++;
+	do {
+		uint16_t want[5] = {1,2,3,4,5};
+		uint16_t a[5];
+		int ret = ini_read_uint16s(conf, "mytest", "array_def", a, 5, want);
+		if (ret < 0) {
+			printf("ERR test%d: %d\n", test_number, ret);
+			break;
+		}
+		if (memcmp(want, a, sizeof(want)) || ret != sizeof(want) / sizeof(uint16_t)) {
+			printf("ERR test%d: [%d]", test_number, ret);
+			int i;
+			for (i = 0; i < ret; i++) {
+				printf("%d,", a[i]);
+			}
+			printf("\n");
+			break;
+		}
+	} while(0);
+
 	ini_free(conf);
+	printf("Test OK\n");
 	return 0;
 }
 

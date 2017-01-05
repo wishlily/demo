@@ -155,6 +155,10 @@ int ini_read_uint8s(ini_t *handler,
 	char *section, char *name,
 	uint8_t *array, uint32_t array_size, uint8_t *default_value);
 
+int ini_read_uint16s(ini_t *handler,
+	char *section, char *name,
+	uint16_t *array, uint32_t array_size, uint16_t *default_value);
+
 /* Free a ini config handler */
 void ini_free(ini_t *handler);
 
