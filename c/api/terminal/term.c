@@ -43,7 +43,8 @@ static term_text_t *term_text_new_line(char *text, uint16_t len)
 	if (ptr == NULL) {
 		return NULL;
 	}
-	ptr->data = (char *)calloc(len, sizeof(char));
+	// NOTE: len + 1 because '\0' need 1 size space
+	ptr->data = (char *)calloc(len+1, sizeof(char));
 	if (ptr->data == NULL) {
 		free(ptr);
 		return NULL;
