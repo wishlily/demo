@@ -75,3 +75,12 @@ func Test_koch(t *testing.T) {
 	defer f.Close()
 	png.Encode(f, img)
 }
+
+func Test_julia(t *testing.T) {
+	const max_len = 1000
+	img := image.NewRGBA(image.Rect(0, 0, max_len, max_len))
+	julia(img, max_len)
+	f, _ := os.OpenFile("julia.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f.Close()
+	png.Encode(f, img)
+}

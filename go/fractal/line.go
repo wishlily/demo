@@ -13,6 +13,10 @@ func line_len(x1, y1, x2, y2 int) float64 {
 	return l
 }
 
+func point(img *image.RGBA, x, y int, c color.Color) {
+	img.Set(x, y, c)
+}
+
 func line(img *image.RGBA, x1, y1, x2, y2 int, c color.Color) {
 	delta_x := x2 - x1
 	delta_y := y2 - y1
