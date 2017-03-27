@@ -41,7 +41,7 @@ func julia(img *image.RGBA, limit int) {
 	s := rand.NewSource(time.Now().Unix())
 	r := rand.New(s)
 
-	// c = [0, 1]
+	// c = [-1, 1]
 	cx := r.Float64()*2 - 1
 	cy := r.Float64()*2 - 1
 	fmt.Println(cx, cy)
@@ -50,6 +50,21 @@ func julia(img *image.RGBA, limit int) {
 		zx := float64(4*i)/float64(limit) - _JULIA_R
 		for j := 0; j < limit; j++ {
 			zy := float64(4*j)/float64(limit) - _JULIA_R
+			gray := uint8(julia_divergent_grey(zx, zy, cx, cy))
+			point(img, i, j, color.Gray{gray})
+		}
+	}
+}
+
+func mandelbrot(img *image.RGBA, limit int) {
+	// z = 0
+	zx := 0.0
+	zy := 0.0
+
+	for i := 0; i < limit; i++ {
+		cx := float64(3*i)/float64(limit) - 2
+		for j := 0; j < limit; j++ {
+			cy := float64(3*j)/float64(limit) - 1.5
 			gray := uint8(julia_divergent_grey(zx, zy, cx, cy))
 			point(img, i, j, color.Gray{gray})
 		}
