@@ -84,3 +84,21 @@ func Test_julia(t *testing.T) {
 	defer f.Close()
 	png.Encode(f, img)
 }
+
+func Test_mandelbrot(t *testing.T) {
+	const max_len = 1000
+	img := image.NewRGBA(image.Rect(0, 0, max_len, max_len))
+	mandelbrot(img, max_len)
+	f, _ := os.OpenFile("mandelbrot.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f.Close()
+	png.Encode(f, img)
+}
+
+func Test_newton(t *testing.T) {
+	const max_len = 500
+	img := image.NewRGBA(image.Rect(0, 0, max_len, max_len))
+	newton(img, max_len)
+	f, _ := os.OpenFile("newton.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f.Close()
+	png.Encode(f, img)
+}
