@@ -102,3 +102,15 @@ func Test_newton(t *testing.T) {
 	defer f.Close()
 	png.Encode(f, img)
 }
+
+func Test_ifs(t *testing.T) {
+	const (
+		x = 300
+		y = 400
+	)
+	img := image.NewRGBA(image.Rect(0, 0, x, y))
+	ifs(img, x, y)
+	f, _ := os.OpenFile("ifs.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f.Close()
+	png.Encode(f, img)
+}
