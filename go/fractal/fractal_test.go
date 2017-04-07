@@ -1,11 +1,14 @@
 package fractal
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/png"
+	"math/rand"
 	"os"
 	"testing"
+	"time"
 )
 
 const (
@@ -111,6 +114,40 @@ func Test_ifs(t *testing.T) {
 	img := image.NewRGBA(image.Rect(0, 0, x, y))
 	ifs(img, x, y)
 	f, _ := os.OpenFile("ifs.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f.Close()
+	png.Encode(f, img)
+}
+
+func Test_triangle(t *testing.T) {
+	const size = 500
+	s := rand.NewSource(time.Now().Unix())
+	r := rand.New(s)
+	A := image.Point{r.Intn(size), r.Intn(size)}
+	B := image.Point{r.Intn(size), r.Intn(size)}
+	C := image.Point{r.Intn(size), r.Intn(size)}
+	fmt.Println(A, B, C)
+
+	img1 := image.NewRGBA(image.Rect(0, 0, size, size))
+	triangle_1(img1, B, A, C, color.Gray{0})
+	f1, _ := os.OpenFile("triangle_1.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f1.Close()
+	png.Encode(f1, img1)
+
+	img2 := image.NewRGBA(image.Rect(0, 0, size, size))
+	triangle_2(img2, B, A, C, color.Gray{0})
+	f2, _ := os.OpenFile("triangle_2.png", os.O_WRONLY|os.O_CREATE, 0600)
+	defer f2.Close()
+	png.Encode(f2, img2)
+}
+
+func Test_sierpinski(t *testing.T) {
+	const (
+		x = 4000
+		y = 3500
+	)
+	img := image.NewRGBA(image.Rect(0, 0, x, y))
+	sierpinski(img, x, y)
+	f, _ := os.OpenFile("sierpinski.png", os.O_WRONLY|os.O_CREATE, 0600)
 	defer f.Close()
 	png.Encode(f, img)
 }
