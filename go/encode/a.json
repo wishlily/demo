@@ -1,0 +1,10 @@
+{
+	"0001": {
+		"Id": "0001",
+		"Secret": "secret",
+		"RedirectUri": "http://localhost:10081/oauth",
+		"UserData": {
+			"name": "My-APP"
+		}
+	}
+}
