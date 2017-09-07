@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <canvas class="bar" width="400" height="400">
+        {
+            "title": "I have Title",
+            "item": ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            "type": "horiz over stack",
+            "data": [{
+                    "label": "one",
+                    "data": [12, 19, 3, 5, 2, 3]
+                },{
+                    "label": "two",
+                    "data": [23, 34, 1, 0, 39, 22]
+                },{
+                    "label": "thrid",
+                    "data": [21, 0, 1, 20, 12, 15]
+                }]
+        }
+    </canvas>
+    <canvas class="bar" width="400" height="400">
+        {
+            "item": ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            "data": [{
+                    "data": [12, 19, 3, 5, 2, 3]
+                }]
+        }
+    </canvas>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="Chart.min.js"></script>
+    <script src="chart.md.js"></script>
+    <script>
+        $(".bar").each(function(){
+            $(this).chart('bar')
+        })
+    </script>
+</body>
+</html>

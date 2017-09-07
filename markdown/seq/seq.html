@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<script src="jquery.min.js"></script>
+	<script src="underscore-min.js"></script>
+	<script src="raphael.min.js"></script>
+	<script src="sequence-diagram-min.js"></script>
+	<title>Document</title>
+</head>
+<body>
+	<div class="diagram">
+		Alice->Bob: Hello Bob, how are you?
+		Note right of Bob: Bob thinks
+		Bob-->Alice: I am good thanks!
+	</div>
+	<script>
+		$(".diagram").sequenceDiagram({theme: 'hand'});
+	</script>
+</body>
+</html>
