@@ -21,3 +21,15 @@ func main() {
 		fmt.Println("I got the byte", b, "("+string(b)+")")
 	}
 }
+
+/* windows
+//#include<conio.h>
+import "C"
+
+import "fmt"
+
+func main() {
+	c := C.getch()
+	fmt.Println("[]: ", c)
+}
+*/
