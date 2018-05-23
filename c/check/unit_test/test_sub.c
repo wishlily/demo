@@ -1,6 +1,6 @@
 #include <check.h>
 #include "unit_test.h"
-#include "sub.c"
+#include "sub.c" // static func test
 
 START_TEST(test_sub) {
 	const float EPSINON = 0.00001;
