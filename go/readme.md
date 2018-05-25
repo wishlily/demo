@@ -5,8 +5,9 @@
 
 - 依赖包管理
 
-		godep save ./...
+        curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 - 拉取网上库
 
 		go get xxx/xxx/xxx
+        
