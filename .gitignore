@@ -2,3 +2,5 @@ react/node_modules/
 react/build/
 *.pyc
 go/vendor
+java/grpc/.settings/*
+java/grpc/target/*

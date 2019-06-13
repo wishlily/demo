@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+option java_package = "com.wishlily.helloworld";
+option java_outer_classname = "HelloWorldProto";
+
+package grpc;
+
+service Greeter {
+    rpc SayHello(Hello) returns (Null) {}
+    rpc SayBye(Null) returns (stream Bye) {}
+}
+
+message Null {}
+
+message Hello {
+    string name = 1;
+    string msg = 2;
+    int64 num = 3;
+}
+
+message Bye {
+    enum Number {
+        ONE = 0;
+        TWO = 1;
+    }
+    Number num = 1;
+    string msg = 2;
+}
